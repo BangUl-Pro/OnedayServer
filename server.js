@@ -799,7 +799,6 @@ io.sockets.on('connection', function (socket) {
                         }
                     });
                 }
-                
 
                 console.log('\n Remove Notice Success');
                 socket.emit('removeNotice', { 'code' : 200 });
