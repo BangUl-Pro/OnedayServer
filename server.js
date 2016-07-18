@@ -174,41 +174,48 @@ io.sockets.on('connection', function (socket) {
         console.log('\n# id = ' + id);
         console.log('\n# pw = ' + pw);
         
-        if (typeof pw === 'undefined') {                       // 페이스북, 네이버 로그인
-            userModel.findOne({ 'user_id' : id }, function (err, userData) {
-                if (err)
-                    console.log('\n# Login Error = ' + err);
-                
-                if (userData == null) {         // 일치하는 아이디가 없다면
-                    var user = new userModel({ 'user_id': id, 'image' : null, 'name' : null });     // 아이디 생성
-                    user.save(function (err) {
-                        if (err) {                  // 오류 발생 시
-                            socket.emit('login', { 'code': 305 });      // 에러코드 전송
-                            console.log('\n# Login Error');
-                        } else {                    // 아이디 생성 성공 시
-                            socket.emit('login', { 'code': 200, 'userId': id, 'userName' : null, 'userImage' : null });        // 성공 코드 전송
-                            console.log('\n# Login Success');
-                        }
-                    });
-                } else {                        // 일치하는 아이디가 있다면
-                    socket.emit('login', { 'code': 200, 'userId': id, 'userName': userData.name, 'userImage' : userData.image });                // 성공 코드 전송
-                    console.log('\n# Login Success');
-                }
+        if (id) {
+            if (typeof pw === 'undefined') {                       // 페이스북, 네이버 로그인
+                userModel.findOne({ 'user_id' : id }, function (err, userData) {
+                    if (err)
+                        console.log('\n# Login Error = ' + err);
+                    
+                    if (userData == null) {         // 일치하는 아이디가 없다면
+                        var user = new userModel({ 'user_id': id, 'image' : null, 'name' : null });     // 아이디 생성
+                        user.save(function (err) {
+                            if (err) {                  // 오류 발생 시
+                                socket.emit('login', { 'code': 305 });      // 에러코드 전송
+                                console.log('\n# Login Error');
+                            } else {                    // 아이디 생성 성공 시
+                                socket.emit('login', { 'code': 200, 'userId': id, 'userName' : null, 'userImage' : null });        // 성공 코드 전송
+                                console.log('\n# Login Success');
+                            }
+                        });
+                    } else {                        // 일치하는 아이디가 있다면
+                        socket.emit('login', { 'code': 200, 'userId': id, 'userName': userData.name, 'userImage' : userData.image });                // 성공 코드 전송
+                        console.log('\n# Login Success');
+                    }
+                });
+            } else {                // OneDay 유저라면
+                userModel.findOne({ $and : [{ 'user_id' : id }, { 'pw' : pw }] }, function (err, userData) {
+                    if (err)
+                        console.log('\n# Login Error = ' + err);
+                    
+                    if (userData == null) {         // 일치하는 아이디,비밀번호가 없다면
+                        socket.emit('login', { 'code': 304 });
+                        console.log('\n# Login Null');
+                    } else {
+                        console.log("userData = " + userData);
+                        socket.emit('login', { 'code': 200, 'userId': id, 'userName': userData.name, 'userImage' : userData.image });
+                        console.log('\n# Login Success');
+                    }
+                });
+            }
+        } else {
+            socket.emit('login', {
+                'code' : 305
             });
-        } else {                // OneDay 유저라면
-            userModel.findOne({ $and : [{ 'user_id' : id }, { 'pw' : pw }] }, function (err, userData) {
-                if (err)
-                    console.log('\n# Login Error = ' + err);
-                
-                if (userData == null) {         // 일치하는 아이디,비밀번호가 없다면
-                    socket.emit('login', { 'code': 304 });
-                    console.log('\n# Login Null');
-                } else {
-                    console.log("userData = " + userData);
-                    socket.emit('login', { 'code': 200, 'userId': id, 'userName': userData.name, 'userImage' : userData.image });
-                    console.log('\n# Login Success');
-                }
-            });
+            console.log('undefined id');
         }
     });
     
