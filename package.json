@@ -1,0 +1,21 @@
+{
+  "name": "OneDay",
+  "version": "0.0.1",
+  "description": "OneDay",
+  "main": "server.js",
+  "author": {
+    "name": "ironFactory"
+  },
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.12.4",
+    "mongoose": "^3.8.34",
+    "socket.io": "^1.3.6"
+  },
+  "engines": {
+    "node": "0.12.4",
+    "npm": "2.10.1"
+  }
+}
