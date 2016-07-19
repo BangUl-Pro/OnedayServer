@@ -221,7 +221,7 @@ io.sockets.on('connection', function (socket) {
             }
         } else {
             socket.emit('login', {
-                'code' : 305
+                'code' : 306
             });
             console.log('undefined id');
         }
