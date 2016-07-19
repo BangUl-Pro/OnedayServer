@@ -304,11 +304,14 @@ io.sockets.on('connection', function (socket) {
     
     
     socket.on('signUp', function (data) {
+        console.log(data);
+        var name = data.name;
         var id = data.userId;
         var pw = data.userPw;
         var birth = data.userBirth;
         var mail = data.userMail;
         console.log('\n id = ' + id);
+        console.log('\n name = ' + name);
         console.log('\n pw = ' + pw);
         console.log('\n birth = ' + birth);
         console.log('\n mail = ' + mail);
@@ -318,7 +321,7 @@ io.sockets.on('connection', function (socket) {
                 socket.emit('signUp', { code: 300 });
                 console.log('\n signUp ID already');
             } else {                                        // 해당 아이디를 가진 유저가 없다면
-                var user = new userModel({ 'user_id' : id, 'pw' : pw, 'birth' : birth, 'mail' : mail, 'image' : null, 'name' : null });
+                var user = new userModel({ 'user_id' : id, 'pw' : pw, 'birth' : birth, 'mail' : mail, 'image' : null, 'name' : name });
                 user.save(function (err) {
                     if (err) {                              // 아이디 생성 실패 시
                         socket.emit('signUp', { code: 301 });
