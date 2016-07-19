@@ -206,7 +206,15 @@ io.sockets.on('connection', function (socket) {
                         console.log('\n# Login Null');
                     } else {
                         console.log("userData = " + userData);
-                        socket.emit('login', { 'code': 200, 'userId': id, 'userName': userData.name, 'userImage' : userData.image });
+                        socket.emit('login', { 'code': 200, 'userId': id,
+                            'userName': userData.name,
+                            'birth': userData.birth,
+                            'mail': userData.mail,
+                            'good': userData.good,
+                            'bad': userData.bad,
+                            'comment': userData.comment,
+                            'notice': userData.notice,
+                            'userImage' : userData.image });
                         console.log('\n# Login Success');
                     }
                 });
