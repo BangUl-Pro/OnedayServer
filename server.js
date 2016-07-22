@@ -352,7 +352,7 @@ io.sockets.on('connection', function (socket) {
         console.log('\n keyWord = ' + keyWord);
         console.log('\n userId = ' + id);
         
-        if (!count || !id || !time) {
+        if (!id || !time) {
             console.log('데이터 누락\n');
             socket.emit('getAllNotices', {
                 'code' : 310
