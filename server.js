@@ -14,6 +14,7 @@ app.get('/', function (req, res) {
 var mongoose = require('mongoose');
 mongoose.connect('mongodb://windsoft:lee7945132@ds047622.mongolab.com:47622/heroku_lj11hr24');
 
+var ObjectId = mongoose.Schema.ObjectId
 
 var userSchema = mongoose.Schema({
     user_id : String,
@@ -22,15 +23,16 @@ var userSchema = mongoose.Schema({
     pw : String,
     birth : Date,
     mail : String,
-    good : [mongoose.Schema.ObjectId],
-    bad : [mongoose.Schema.ObjectId],
-    comment : [{ notice_id : mongoose.Schema.ObjectId, content : String }],
-    notice : [mongoose.Schema.ObjectId],
+    friends: [ObjectId]
+    good : [ObjectId],
+    bad : [ObjectId],
+    comment : [{ notice_id : ObjectId, content : String }],
+    notice : [ObjectId],
     delete_comment : [{ notice_id: String, content: String, time : Date }]
 });
 
 var noticeSchema = mongoose.Schema({
-    notice_id : mongoose.Schema.ObjectId,
+    notice_id : ObjectId,
     user_id : String,
     user_img : String,
     name : String,
@@ -364,19 +366,32 @@ io.sockets.on('connection', function (socket) {
                 console.log('\n noticeCount = ' + noticeCount);
             } else {
                 if (!keyWord) {                // 키워드가 설정 되지 않았다면
-                    noticeModel.find({'date' : {$lt: {time}}}).sort({ 'date': -1 }).skip(skip).limit(20).exec(function (err, noticeData) {
+                    userModel.findOne({'userId': id}, function(err, userData) {
                         if (err) {
-                            socket.emit('getAllNotices', { 'code' : 302, 'notice' : null, 'userId' : null, 'count' : 0, 'noticeId' : null });
-                            console.log('\n getAllNotices Err = ' + err);
+                            console.log('findUser error = ' + err);
+                            socket.emit('getAllNotices', {
+                                'code' : 303
+                            });
                         } else {
-                            socket.emit('getAllNotices', { 'code' : 200, 'notice' : noticeData, 'userId' : id, 'count' : count });
-                            console.log('\n getAllNotices Success');
+                            console.log('userData = ' + userData);
+                            if (userData) {
+                                noticeModel.find({ $and : [{'date' : {$lt: {time}}}, {$or : [{'userId': id}, {'userId': {$in : userData.friends}}]}]})
+                                            .sort({ 'date': -1 }).skip(skip).limit(20).exec(function (err, noticeData) {
+                                    if (err) {
+                                        socket.emit('getAllNotices', { 'code' : 302, 'notice' : null, 'userId' : null, 'count' : 0, 'noticeId' : null });
+                                        console.log('\n getAllNotices Err = ' + err);
+                                    } else {
+                                        socket.emit('getAllNotices', { 'code' : 200, 'notice' : noticeData, 'userId' : id, 'count' : count });
+                                        console.log('\n getAllNotices Success');
+                                    }
+                                });
+                            }
                         }
                     });
                 } else {                                        // 키워드가 있다면
                     noticeModel.find({'content' : {$regex : keyWord}}).sort({ 'date': -1 }).skip(skip).limit(20).exec(function (err, noticeData) {
                         if (err) {
-                            socket.emit('getAllNotices', { 'code' : 302, 'notice' : null, 'userId' : null, 'count' : 0 });
+                            socket.emit('getAllNotices', { 'code' : 304, 'notice' : null, 'userId' : null, 'count' : 0 });
                             console.log('\n getAllNotices Keyword Err = ' + err);
                         } else {
                             socket.emit('getAllNotices', { 'code' : 200, 'notice' : noticeData, 'userId': id, 'count' : count });
