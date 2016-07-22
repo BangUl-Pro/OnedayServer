@@ -206,7 +206,9 @@ io.sockets.on('connection', function (socket) {
                         console.log('\n# Login Null');
                     } else {
                         console.log("userData = " + userData);
-                        socket.emit('login', { 'code': 200, 'userId': id,
+                        socket.emit('login', {
+                            'code': 200,
+                            'userId': id,
                             'userName': userData.name,
                             'birth': userData.birth,
                             'mail': userData.mail,
@@ -214,7 +216,8 @@ io.sockets.on('connection', function (socket) {
                             'bad': userData.bad,
                             'comment': userData.comment,
                             'notice': userData.notice,
-                            'userImage' : userData.image });
+                            'userImage' : userData.image
+                        });
                         console.log('\n# Login Success');
                     }
                 });
@@ -336,7 +339,7 @@ io.sockets.on('connection', function (socket) {
     });
     
     
-    socket.on('readNotice', function (data) {
+    socket.on('getAllNotices', function (data) {
         var count = data.count;
         var skip = data.count * 20;
         var id = data.userId;
@@ -348,28 +351,28 @@ io.sockets.on('connection', function (socket) {
         
         noticeModel.count({}, function (err, noticeCount) {
             if (noticeCount < skip) {                       // 요청한 글의 개수보다 db 수가 적다면
-                socket.emit('readNotice', { 'code' : 309, 'notice' : null, 'userId' : null, 'count' : 0 });
-                console.log('\n readNotice Not Enough NoticeDB');
+                socket.emit('getAllNotices', { 'code' : 309, 'notice' : null, 'userId' : null, 'count' : 0 });
+                console.log('\n getAllNotices Not Enough NoticeDB');
                 console.log('\n noticeCount = ' + noticeCount);
             } else {
                 if (typeof keyWord === 'undefined') {                // 키워드가 설정 되지 않았다면
                     noticeModel.find({}).sort({ 'date': -1 }).skip(skip).limit(20).exec(function (err, noticeData) {
                         if (err) {
-                            socket.emit('readNotice', { 'code' : 302, 'notice' : null, 'userId' : null, 'count' : 0, 'noticeId' : null });
-                            console.log('\n ReadNotice Err = ' + err);
+                            socket.emit('getAllNotices', { 'code' : 302, 'notice' : null, 'userId' : null, 'count' : 0, 'noticeId' : null });
+                            console.log('\n getAllNotices Err = ' + err);
                         } else {
-                            socket.emit('readNotice', { 'code' : 200, 'notice' : noticeData, 'userId' : id, 'count' : count });
-                            console.log('\n ReadNotice Success');
+                            socket.emit('getAllNotices', { 'code' : 200, 'notice' : noticeData, 'userId' : id, 'count' : count });
+                            console.log('\n getAllNotices Success');
                         }
                     });
                 } else {                                        // 키워드가 있다면
                     noticeModel.find({'content' : {$regex : keyWord}}).sort({ 'date': -1 }).skip(skip).limit(20).exec(function (err, noticeData) {
                         if (err) {
-                            socket.emit('readNotice', { 'code' : 302, 'notice' : null, 'userId' : null, 'count' : 0 });
-                            console.log('\n ReadNotice Keyword Err = ' + err);
+                            socket.emit('getAllNotices', { 'code' : 302, 'notice' : null, 'userId' : null, 'count' : 0 });
+                            console.log('\n getAllNotices Keyword Err = ' + err);
                         } else {
-                            socket.emit('readNotice', { 'code' : 200, 'notice' : noticeData, 'userId': id, 'count' : count });
-                            console.log('\n ReadNotice Success Keyword');
+                            socket.emit('getAllNotices', { 'code' : 200, 'notice' : noticeData, 'userId': id, 'count' : count });
+                            console.log('\n getAllNotices Success Keyword');
                         }
                     });
                 }
