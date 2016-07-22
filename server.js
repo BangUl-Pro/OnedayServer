@@ -343,7 +343,7 @@ io.sockets.on('connection', function (socket) {
     
     socket.on('getAllNotices', function (data) {
         var count = data.count;
-        var skip = data.count * 20;
+        var skip = count * 20;
         var id = data.userId;
         var time = data.time;
         var keyWord = data.keyWord;
@@ -352,7 +352,7 @@ io.sockets.on('connection', function (socket) {
         console.log('\n keyWord = ' + keyWord);
         console.log('\n userId = ' + id);
         
-        if (!count || !skip || !id || !time) {
+        if (!count || !id || !time) {
             console.log('데이터 누락\n');
             socket.emit('getAllNotices', {
                 'code' : 310
