@@ -343,20 +343,28 @@ io.sockets.on('connection', function (socket) {
         var count = data.count;
         var skip = data.count * 20;
         var id = data.userId;
+        var time = data.time;
         var keyWord = data.keyWord;
         
         console.log('\n count = ' + count);
         console.log('\n keyWord = ' + keyWord);
         console.log('\n userId = ' + id);
         
+        if (!count || !skip || !id || !time) {
+            console.log('데이터 누락\n');
+            socket.emit('getAllNotices', {
+                'code' : 310
+            });
+        }
+
         noticeModel.count({}, function (err, noticeCount) {
             if (noticeCount < skip) {                       // 요청한 글의 개수보다 db 수가 적다면
                 socket.emit('getAllNotices', { 'code' : 309, 'notice' : null, 'userId' : null, 'count' : 0 });
                 console.log('\n getAllNotices Not Enough NoticeDB');
                 console.log('\n noticeCount = ' + noticeCount);
             } else {
-                if (typeof keyWord === 'undefined') {                // 키워드가 설정 되지 않았다면
-                    noticeModel.find({}).sort({ 'date': -1 }).skip(skip).limit(20).exec(function (err, noticeData) {
+                if (!keyWord) {                // 키워드가 설정 되지 않았다면
+                    noticeModel.find({'date' : {$lt: {time}}}).sort({ 'date': -1 }).skip(skip).limit(20).exec(function (err, noticeData) {
                         if (err) {
                             socket.emit('getAllNotices', { 'code' : 302, 'notice' : null, 'userId' : null, 'count' : 0, 'noticeId' : null });
                             console.log('\n getAllNotices Err = ' + err);
