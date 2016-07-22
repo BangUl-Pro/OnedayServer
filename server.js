@@ -375,7 +375,7 @@ io.sockets.on('connection', function (socket) {
                         } else {
                             console.log('userData = ' + userData);
                             if (userData) {
-                                noticeModel.find({ $and : [{'date' : {$lt: {time}}}, {$or : [{'userId': id}, {'userId': {$in : userData.friends}}]}]})
+                                noticeModel.find({ $and : [{'date' : {$lt: time}}, {$or : [{'userId': id}, {'userId': {$in : userData.friends}}]}]})
                                             .sort({ 'date': -1 }).skip(skip).limit(20).exec(function (err, noticeData) {
                                     if (err) {
                                         socket.emit('getAllNotices', { 'code' : 302, 'notice' : null, 'userId' : null, 'count' : 0, 'noticeId' : null });
