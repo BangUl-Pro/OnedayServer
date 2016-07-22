@@ -23,7 +23,7 @@ var userSchema = mongoose.Schema({
     pw : String,
     birth : Date,
     mail : String,
-    friends: [ObjectId]
+    friends: [ObjectId],
     good : [ObjectId],
     bad : [ObjectId],
     comment : [{ notice_id : ObjectId, content : String }],
