@@ -357,6 +357,7 @@ io.sockets.on('connection', function (socket) {
             socket.emit('getAllNotices', {
                 'code' : 310
             });
+            return;
         }
 
         noticeModel.count({}, function (err, noticeCount) {
@@ -366,26 +367,26 @@ io.sockets.on('connection', function (socket) {
                 console.log('\n noticeCount = ' + noticeCount);
             } else {
                 if (!keyWord) {                // 키워드가 설정 되지 않았다면
-                    userModel.findOne({'userId': id}, function(err, userData) {
+                    userModel.findOne({'user_id': id}, function(err, userData) {
                         if (err) {
                             console.log('findUser error = ' + err);
                             socket.emit('getAllNotices', {
                                 'code' : 303
                             });
-                        } else {
-                            console.log('userData = ' + userData);
-                            if (userData) {
-                                noticeModel.find({ $and : [{'date' : {$lt: time}}, {$or : [{'userId': id}, {'userId': {$in : userData.friends}}]}]})
-                                            .sort({ 'date': -1 }).skip(skip).limit(20).exec(function (err, noticeData) {
-                                    if (err) {
-                                        socket.emit('getAllNotices', { 'code' : 302, 'notice' : null, 'userId' : null, 'count' : 0, 'noticeId' : null });
-                                        console.log('\n getAllNotices Err = ' + err);
-                                    } else {
-                                        socket.emit('getAllNotices', { 'code' : 200, 'notice' : noticeData, 'userId' : id, 'count' : count });
-                                        console.log('\n getAllNotices Success');
-                                    }
-                                });
-                            }
+                            return;
+                        }
+                        console.log('userData = ' + userData);
+                        if (userData) {
+                            noticeModel.find({ $and : [{'date' : {$lt: time}}, {$or : [{'user_id': id}, {'user_id': {$in : userData.friends}}]}]})
+                                        .sort({ 'date': -1 }).skip(skip).limit(20).exec(function (err, noticeData) {
+                                if (err) {
+                                    socket.emit('getAllNotices', { 'code' : 302, 'notice' : null, 'userId' : null, 'count' : 0, 'noticeId' : null });
+                                    console.log('\n getAllNotices Err = ' + err);
+                                } else {
+                                    socket.emit('getAllNotices', { 'code' : 200, 'notice' : noticeData, 'userId' : id, 'count' : count });
+                                    console.log('\n getAllNotices Success');
+                                }
+                            });
                         }
                     });
                 } else {                                        // 키워드가 있다면
