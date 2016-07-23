@@ -6,6 +6,8 @@ var server = http.createServer(app).listen(process.env.PORT || 5000);
 
 var io = require('socket.io').listen(server);
 
+app.use(express.bodyParser())
+
 app.get('/', function (req, res) {
     res.send('OneDay');
     console.log('\nOneDay');
@@ -48,6 +50,27 @@ var noticeSchema = mongoose.Schema({
 
 var userModel = mongoose.model('user', userSchema);
 var noticeModel = mongoose.model('notice', noticeSchema);
+
+
+var fs = require('fs');
+
+app.post('/upload_profile_image', function(req, res) {
+    fs.readFile(req.files.uploadFile.path, function(err, data) {
+        var filePath = __dirname + "\\files\\" + req.files.uploadFile.name;
+        fs.writeFile(filePath, data, function(err) {
+            if (err) {
+                console.log('file write err = ' + err);
+            } else {
+                res.writeHead(200)
+                res.end()
+            }
+        });
+    });
+});
+
+
+
+
 
 setInterval(function () {
     noticeModel.find({}, function (err, data) {
@@ -375,7 +398,6 @@ io.sockets.on('connection', function (socket) {
                             });
                             return;
                         }
-                        console.log('userData = ' + userData);
                         if (userData) {
                             noticeModel.find({ $and : [{'date' : {$lt: time}}, {$or : [{'user_id': id}, {'user_id': {$in : userData.friends}}]}]})
                                         .sort({ 'date': -1 }).skip(skip).limit(20).exec(function (err, noticeData) {
