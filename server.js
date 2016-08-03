@@ -219,7 +219,10 @@ io.sockets.on('connection', function (socket) {
                             }
                         });
                     } else {                        // 일치하는 아이디가 있다면
-                        socket.emit('login', { 'code': 200, 'userId': id, 'userName': userData.name, 'userImage' : userData.image });                // 성공 코드 전송
+                        socket.emit('login', {
+                            'code': 200,
+                            'user': userData
+                        });                // 성공 코드 전송
                         console.log('\n# Login Success');
                     }
                 });
