@@ -1,12 +1,13 @@
 ﻿var http = require('http'),
     express = require('express'),
-    app = express();
+    app = express(),
+    bodyParser = require('body-parser');
 var server = http.createServer(app).listen(process.env.PORT || 5000);
 
 
 var io = require('socket.io').listen(server);
 
-app.use(express.bodyParser())
+app.use(bodyParser)
 
 app.get('/', function (req, res) {
     res.send('OneDay');
