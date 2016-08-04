@@ -238,15 +238,7 @@ io.sockets.on('connection', function (socket) {
                         console.log("userData = " + userData);
                         socket.emit('login', {
                             'code': 200,
-                            'userId': id,
-                            'userName': userData.name,
-                            'birth': userData.birth,
-                            'mail': userData.mail,
-                            'good': userData.good,
-                            'bad': userData.bad,
-                            'comment': userData.comment,
-                            'notice': userData.notice,
-                            'userImage' : userData.image
+                            'user': userData
                         });
                         console.log('\n# Login Success');
                     }
