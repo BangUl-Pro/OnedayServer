@@ -223,7 +223,7 @@ io.sockets.on('connection', function (socket) {
                             'code': 200,
                             'user': userData
                         });                // 성공 코드 전송
-                        console.log('\n# Login Success');
+                        console.log('\n# Login Success'); 
                     }
                 });
             } else {                // OneDay 유저라면
