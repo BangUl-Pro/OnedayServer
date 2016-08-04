@@ -202,7 +202,7 @@ io.sockets.on('connection', function (socket) {
         console.log('\n# pw = ' + pw);
         
         if (id) {
-            if (typeof pw === 'undefined') {                       // 페이스북, 네이버 로그인
+            if (!pw) {                       // 페이스북, 네이버 로그인
                 userModel.findOne({ 'user_id' : id }, function (err, userData) {
                     if (err)
                         console.log('\n# Login Error = ' + err);
