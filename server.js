@@ -403,7 +403,7 @@ io.sockets.on('connection', function (socket) {
                                     console.log('\n getAllNotices Err = ' + err);
                                 } else {
                                     socket.emit('getAllNotices', { 'code' : 200, 'notice' : noticeData, 'userId' : id, 'count' : count });
-                                    console.log('\n getAllNotices Success');
+                                    console.log('\n getAllNotices Success = ' + JSON.stringify(noticeData));
                                 }
                             });
                         }
