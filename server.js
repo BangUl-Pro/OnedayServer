@@ -30,7 +30,7 @@ var userSchema = mongoose.Schema({
     friends: [ObjectId],
     good : [ObjectId],
     bad : [ObjectId],
-    comment : [{ user_id: String, user_img:String, content: String, date : Date, name : String }],
+    comment : [{ notice_id : ObjectId, content : String }],
     notice : [ObjectId],
     delete_comment : [{ notice_id: String, content: String, time : Date }]
 });
@@ -579,7 +579,7 @@ io.sockets.on('connection', function (socket) {
         console.log('\n noticeId = ' + noticeId);
         console.log('\n comment = ' + comment);
 
-        userModel.findOneAndUpdate({ 'user_id' : id }, { $push : { 'comment' : { 'user_id' : id, 'user_image' : userData.image, 'content' : comment, 'name' : name, 'date' : date } } }, function (err, userData) {
+        userModel.findOneAndUpdate({ 'user_id' : id }, { $push: { 'comment' : { 'notice_id' : noticeId, 'content' : comment } } }, function (err, userData) {
             if (err) {
                 console.log('\n comment Update User DB Error = ' + err);
                 socket.emit('insertComment', { 'code' : 312, 'comment' : comment, 'position' : position, 'noticeId' : noticeId });
