@@ -30,7 +30,7 @@ var userSchema = mongoose.Schema({
     friends: [ObjectId],
     good : [ObjectId],
     bad : [ObjectId],
-    comment : [{ notice_id : ObjectId, content : String }],
+    comment : [{ user_id: String, user_img:String, content: String, date : Date, name : String }],
     notice : [ObjectId],
     delete_comment : [{ notice_id: String, content: String, time : Date }]
 });
@@ -565,7 +565,7 @@ io.sockets.on('connection', function (socket) {
     });
 
 
-    socket.on('comment', function (data) {
+    socket.on('inserComment', function (data) {
         var id = data.userId;
         var noticeId = data.noticeId;
         var comment = data.comment;
@@ -579,18 +579,18 @@ io.sockets.on('connection', function (socket) {
         console.log('\n noticeId = ' + noticeId);
         console.log('\n comment = ' + comment);
 
-        userModel.findOneAndUpdate({ 'user_id' : id }, { $push: { 'comment' : { 'notice_id' : noticeId, 'content' : comment } } }, function (err, userData) {
+        userModel.findOneAndUpdate({ 'user_id' : id }, { $push : { 'comment' : { 'user_id' : id, 'user_image' : userData.image, 'content' : comment, 'name' : name, 'date' : date } } }, function (err, userData) {
             if (err) {
                 console.log('\n comment Update User DB Error = ' + err);
-                socket.emit('comment', { 'code' : 312, 'comment' : comment, 'position' : position, 'noticeId' : noticeId });
+                socket.emit('inserComment', { 'code' : 312, 'comment' : comment, 'position' : position, 'noticeId' : noticeId });
             } else {
                 noticeModel.findOneAndUpdate({ 'notice_id' : noticeId }, { $push : { 'comment' : { 'user_id' : id, 'user_image' : userData.image, 'content' : comment, 'name' : name, 'date' : date } } }, function (err, noticeData) {
                     if (err) {
-                        console.log('\n comment Update Notice DB Error = ' + err);
-                        socket.emit('comment', { 'code' : 313, 'comment' : comment, 'position' : position, 'noticeId' : noticeId });
+                        console.log('\n inserComment Update Notice DB Error = ' + err);
+                        socket.emit('inserComment', { 'code' : 313, 'comment' : comment, 'position' : position, 'noticeId' : noticeId });
                     } else {
-                        console.log('\n comment Success');
-                        socket.emit('comment', { 'code' : 200, 'comment' : comment, 'position' : position, 'noticeId' : noticeId });
+                        console.log('\n inserComment Success');
+                        socket.emit('inserComment', { 'code' : 200, 'comment' : comment, 'position' : position, 'noticeId' : noticeId });
                     }
                 });
             }
