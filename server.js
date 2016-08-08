@@ -565,7 +565,7 @@ io.sockets.on('connection', function (socket) {
     });
 
 
-    socket.on('inserComment', function (data) {
+    socket.on('insertComment', function (data) {
         var id = data.userId;
         var noticeId = data.noticeId;
         var comment = data.comment;
@@ -582,15 +582,15 @@ io.sockets.on('connection', function (socket) {
         userModel.findOneAndUpdate({ 'user_id' : id }, { $push : { 'comment' : { 'user_id' : id, 'user_image' : userData.image, 'content' : comment, 'name' : name, 'date' : date } } }, function (err, userData) {
             if (err) {
                 console.log('\n comment Update User DB Error = ' + err);
-                socket.emit('inserComment', { 'code' : 312, 'comment' : comment, 'position' : position, 'noticeId' : noticeId });
+                socket.emit('insertComment', { 'code' : 312, 'comment' : comment, 'position' : position, 'noticeId' : noticeId });
             } else {
                 noticeModel.findOneAndUpdate({ 'notice_id' : noticeId }, { $push : { 'comment' : { 'user_id' : id, 'user_image' : userData.image, 'content' : comment, 'name' : name, 'date' : date } } }, function (err, noticeData) {
                     if (err) {
-                        console.log('\n inserComment Update Notice DB Error = ' + err);
-                        socket.emit('inserComment', { 'code' : 313, 'comment' : comment, 'position' : position, 'noticeId' : noticeId });
+                        console.log('\n insertComment Update Notice DB Error = ' + err);
+                        socket.emit('insertComment', { 'code' : 313, 'comment' : comment, 'position' : position, 'noticeId' : noticeId });
                     } else {
-                        console.log('\n inserComment Success');
-                        socket.emit('inserComment', { 'code' : 200, 'comment' : comment, 'position' : position, 'noticeId' : noticeId });
+                        console.log('\n insertComment Success');
+                        socket.emit('insertComment', { 'code' : 200, 'comment' : comment, 'position' : position, 'noticeId' : noticeId });
                     }
                 });
             }
