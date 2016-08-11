@@ -764,6 +764,39 @@ io.sockets.on('connection', function (socket) {
     });
 
 
+    socket.on('getUsers', function(data) {
+        var keyword = data.keywod
+
+        console.log('getUsers = ' + keyword);
+
+        if (!keyword) {
+            console.log('data 누락 ');
+            socket.emit('getUsers', {
+                'code' : 500
+            });
+        } else {
+            userModel.find({
+                $or : [
+                    {'user_id' : { $regex : keyword}},
+                    {'name' : { $regex : keyword }}
+                ]
+            }, function(err, userData) {
+                if (err) {
+                    console.log('getUsers error = ' + err);
+                    socket.emit('getUsers', {
+                        'code' : 501
+                    });
+                } else {
+                    socket.emit('getUsers', {
+                        'code' : 200,
+                        'user' : userData
+                    });
+                }
+            });
+        }
+    });
+
+
     socket.on('removeNotice', function (data) {
         var noticeId = data.noticeId;
         
