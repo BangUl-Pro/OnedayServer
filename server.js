@@ -765,7 +765,7 @@ io.sockets.on('connection', function (socket) {
 
 
     socket.on('getUsers', function(data) {
-        var keyword = data.keywod
+        var keyword = data.keyword
 
         console.log('getUsers = ' + keyword);
 
