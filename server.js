@@ -277,6 +277,32 @@ io.sockets.on('connection', function (socket) {
             }
         });
     });
+
+
+    socket.on('setMail', function (data) {
+        var id = data.userId;
+        var mail = data.userMail;
+        console.log('\n setMail');
+        console.log('\n id = ' + id);
+        console.log('\n mail = ' + mail);
+        
+        userModel.findOne({ 'mail' : mail }, function (err, userData) {
+            if (userData != null) {                             // 이미 같은 닉네임을 사용 중이라면
+                console.log('\n setMail mail is already use');
+                socket.emit('setMail', { 'code': 307 });
+            } else {
+                userModel.findOneAndUpdate({ 'user_id': id }, { 'mail' : mail }, function (err, userData) {
+                    if (err) {
+                        console.log('\n setMail Error = ' + err);
+                        socket.emit('setMail', { 'code': 303 , 'mail' : null });
+                    } else {
+                        console.log('\n setMail Success');
+                        socket.emit('setMail', { 'code': 200 , 'mail' : mail });
+                    }
+                });
+            }
+        });
+    });
     
     
     socket.on('profile', function (data) {
@@ -795,6 +821,29 @@ io.sockets.on('connection', function (socket) {
             });
         }
     });
+
+
+    socket.on('getFriendProfile', function(data) {
+        var users = data.users;
+        var friends = [];
+        for (var i = 0; i < users.length; i++) {
+            userModel.findOne({'user_id' : users[i]}, function(err, userData) {
+                if (err) {
+                    console.log('user 찾기 에러');
+                    socket.emit('getFriendProfile', {
+                        'code' : 500
+                    });
+                    return;
+                }
+
+                friends.push(userData);
+            });
+        }
+        socket.emit('getFriendProfile', {
+            'code' : 200,
+            'friends' : friends
+        });
+    })
 
 
     socket.on('removeNotice', function (data) {
