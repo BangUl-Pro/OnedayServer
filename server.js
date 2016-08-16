@@ -316,6 +316,13 @@ io.sockets.on('connection', function (socket) {
                 socket.emit('profile', { 'code' : 341 });
             } else {
                 var array = new Array();
+
+                if (!userData) {
+                    socket.emit('profile', {
+                        'code' : 500
+                    });
+                    return;
+                }
                 
                 for (var i = 0; i < userData.notice.length; i++) {
                     array.push(userData.notice[i]);
