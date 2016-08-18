@@ -17,6 +17,7 @@ app.get('/', function (req, res) {
 
 var mongoose = require('mongoose');
 mongoose.connect('mongodb://windsoft:lee7945132@ds047622.mongolab.com:47622/heroku_lj11hr24');
+var conn = mongoose.connection;
 
 var ObjectId = mongoose.Schema.ObjectId
 
@@ -55,6 +56,14 @@ var noticeModel = mongoose.model('notice', noticeSchema);
 
 
 var fs = require('fs');
+var Grid = require('gridfs-stream');
+Grid.mongo = mongoose.mongo;
+
+conn.once('open', function() {
+    console.log('mongoose open');
+
+});
+
 
 app.post('/upload_profile_image', function(req, res) {
     fs.readFile(req.files.uploadFile.path, function(err, data) {
@@ -65,6 +74,26 @@ app.post('/upload_profile_image', function(req, res) {
             } else {
                 res.writeHead(200)
                 res.end()
+            }
+        });
+    });
+});
+
+app.post('/upload_images', function(req, res) {
+    fs.readFile(req.files.uploadFile.path, function(err, data) {
+        if (err) {
+            console.log(err);
+            return;
+        }
+
+        var filePath = __dirname + "\\files\\" + req.files.uploadFile.name;
+        fs.writeFile(filePath, data, function(err) {
+            if (err) {
+                console.log(err);
+            } else {
+                console.log('success');
+                res.writeHead(200);
+                res.end();
             }
         });
     });
