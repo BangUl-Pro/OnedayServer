@@ -80,6 +80,8 @@ app.post('/upload_profile_image', function(req, res) {
 });
 
 app.post('/upload_images', function(req, res) {
+    console.log('req = ' + req);
+    console.log('req.files = ' + req.files);
     fs.readFile(req.files.uploadFile.path, function(err, data) {
         if (err) {
             console.log(err);
