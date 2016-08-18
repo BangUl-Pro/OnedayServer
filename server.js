@@ -80,8 +80,10 @@ app.post('/upload_profile_image', function(req, res) {
 });
 
 app.post('/upload_images', function(req, res) {
+    console.log('req.headers = ' + JSON.stringify(req.headers));
     console.log('req.body = ' + JSON.stringify(req.body));
-    console.log('req = ' + Object.stringify(req));
+    console.log('req.params = ' + JSON.stringify(req.params));
+    console.log('req.params = ' + JSON.stringify(req.parameters));
     console.log('req.files = ' + req.files);
     fs.readFile(req.files.uploadFile.path, function(err, data) {
         if (err) {
