@@ -83,9 +83,12 @@ app.post('/upload_profile_image', function(req, res) {
 var util = require('util');
 
 app.post('/upload_images', function(req, res) {
-    var body = req.file;
-    console.log('req.body = ' + JSON.stringify(body));
-    console.log('req.images = ' + JSON.stringify(body["images[]"]));
+    console.log('req = ' + JSON.stringify(req));
+    req.forEach(function(key) {
+        console.log('key = ' + key);
+    });
+    console.log('req.file = ' + JSON.stringify(req.file));
+    // console.log('req.images = ' + JSON.stringify(body["images[]"]));
     fs.readFile(req.files.uploadFile.path, function(err, data) {
         if (err) {
             console.log(err);
