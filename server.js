@@ -82,7 +82,7 @@ app.post('/upload_profile_image', function(req, res) {
 var util = require('util');
 
 app.post('/upload_images', function(req, res) {
-    console.log('req = ' + util.inspect(req, false, null));
+    // console.log('req = ' + util.inspect(req, false, null));
     console.log('req.headers = ' + JSON.stringify(req.headers));
     console.log('req.body = ' + JSON.stringify(req.body));
     console.log('req.params = ' + JSON.stringify(req.params));
