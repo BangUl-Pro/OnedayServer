@@ -84,7 +84,7 @@ var util = require('util');
 app.post('/upload_images', function(req, res) {
     var body = req.body;
     console.log('req.body = ' + JSON.stringify(body));
-    console.log('req.images = ' + JSON.stringify(body.images[]));
+    console.log('req.images = ' + JSON.stringify(body["images"]));
     fs.readFile(req.files.uploadFile.path, function(err, data) {
         if (err) {
             console.log(err);
