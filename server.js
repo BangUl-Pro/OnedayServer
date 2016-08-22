@@ -8,7 +8,8 @@ var server = http.createServer(app).listen(process.env.PORT || 5000);
 var io = require('socket.io').listen(server);
 
 app.use(bodyParser.urlencoded({extended: false}));
-app.use(bodyParser.json());
+app.use(bodyParser.json({limit: '50mb'}));
+app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
 
 app.get('/', function (req, res) {
     res.send('OneDay');
