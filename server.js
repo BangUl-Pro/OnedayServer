@@ -84,6 +84,7 @@ var util = require('util');
 
 app.post('/upload_images', function(req, res) {
     console.log('req = ' + req);
+    var cache = [];
     console.log('reqjson = ' + JSON.stringify(req, function(key, value) {
         if (typeof value === 'object' && value !== null) {
             if (cache.indexOf(value) !== -1) {
