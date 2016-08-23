@@ -83,10 +83,21 @@ app.post('/upload_profile_image', function(req, res) {
 var util = require('util');
 
 app.post('/upload_images', function(req, res) {
-    console.log('req = ' + JSON.stringify(req));
+    console.log('req = ' + req);
     req.forEach(function(key) {
         console.log('key = ' + key);
     });
+    console.log('req = ' + JSON.stringify(req, function(key, value) {
+        if (typeof value === 'object' && value !== null) {
+            if (cache.indexOf(value) !== -1) {
+                // Circular reference found, discard key
+                return;
+            }
+            // Store value in our collection
+            cache.push(value);
+        }
+        return value;
+    }));
     console.log('req.file = ' + JSON.stringify(req.file));
     // console.log('req.images = ' + JSON.stringify(body["images[]"]));
     fs.readFile(req.files.uploadFile.path, function(err, data) {
