@@ -87,7 +87,7 @@ app.post('/upload_images', function(req, res) {
     req.forEach(function(key) {
         console.log('key = ' + key);
     });
-    console.log('req = ' + JSON.stringify(req, function(key, value) {
+    console.log('reqjson = ' + JSON.stringify(req, function(key, value) {
         if (typeof value === 'object' && value !== null) {
             if (cache.indexOf(value) !== -1) {
                 // Circular reference found, discard key
