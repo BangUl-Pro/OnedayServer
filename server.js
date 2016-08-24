@@ -1,16 +1,7 @@
 ﻿var http = require('http'),
     express = require('express'),
-    app = express(),
     bodyParser = require('body-parser');
-var server = http.createServer(app).listen(process.env.PORT || 5000);
-var multer = require('multer');
-
-var io = require('socket.io').listen(server);
-
-// app.use(express.bodyParser());
-// app.use(bodyParser.urlencoded({extended: false}));
-// app.use(bodyParser.json({limit: '50mb'}));
-// app.use(bodyParser.urlencoded({limit: '50mb'}));
+var app = express();
 
 app.configure(function() {
     app.use(express.bodyParser());
@@ -24,6 +15,17 @@ app.get('/', function (req, res) {
     res.send('OneDay');
     console.log('\nOneDay');
 });
+
+
+var server = http.createServer(app).listen(process.env.PORT || 5000);
+var multer = require('multer');
+
+var io = require('socket.io').listen(server);
+
+// app.use(express.bodyParser());
+// app.use(bodyParser.urlencoded({extended: false}));
+// app.use(bodyParser.json({limit: '50mb'}));
+// app.use(bodyParser.urlencoded({limit: '50mb'}));
 
 var mongoose = require('mongoose');
 mongoose.connect('mongodb://windsoft:lee7945132@ds047622.mongolab.com:47622/heroku_lj11hr24');
