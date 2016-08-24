@@ -91,7 +91,7 @@ app.post('/upload_profile_image', function(req, res) {
 
 var util = require('util');
 
-app.post('/upload_images', upload.single('photos'), function(req, res) {
+app.post('/upload_images', function(req, res) {
     console.log(req.body);
     console.log(req.file);
 
@@ -112,23 +112,23 @@ app.post('/upload_images', upload.single('photos'), function(req, res) {
     // console.log('req.body = ' + JSON.stringify(req.body));
     // console.log('req.headers = ' + JSON.stringify(req.headers));
     // // console.log('req.images = ' + JSON.stringify(body["images[]"]));
-    // fs.readFile(req.files.uploadFile.path, function(err, data) {
-    //     if (err) {
-    //         console.log(err);
-    //         return;
-    //     }
+    fs.readFile(req.files.uploadFile.path, function(err, data) {
+        if (err) {
+            console.log(err);
+            return;
+        }
 
-    //     var filePath = __dirname + "\\files\\" + req.files.uploadFile.name;
-    //     fs.writeFile(filePath, data, function(err) {
-    //         if (err) {
-    //             console.log(err);
-    //         } else {
-    //             console.log('success');
-    //             res.writeHead(200);
-    //             res.end();
-    //         }
-    //     });
-    // });
+        var filePath = __dirname + "\\files\\" + req.files.uploadFile.name;
+        fs.writeFile(filePath, data, function(err) {
+            if (err) {
+                console.log(err);
+            } else {
+                console.log('success');
+                res.writeHead(200);
+                res.end();
+            }
+        });
+    });
 });
 
 
