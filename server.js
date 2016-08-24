@@ -4,6 +4,7 @@ var app = express();
 var fs = require('fs');
 var Grid = require('gridfs-stream');
 var bodyParser = require('body-parser');
+var multiparty = require('multiparty');
 
 
 app.get('/', function (req, res) {
@@ -89,9 +90,50 @@ app.post('/upload_profile_image', function(req, res) {
 var util = require('util');
 
 app.post('/upload_images', function(req, res) {
-    console.log(req.body);
-    console.log(req.file);
-    console.log(req.files);
+    var form = new multiparty.Form();
+
+    form.on('field', function(name, value) {
+        console.log('normal field / name = ' + name + ' value = ' + value);
+    });
+
+    // file upload handling
+      form.on('part',function(part){
+           var filename;
+           var size;
+           if (part.filename) {
+                 filename = part.filename;
+                 size = part.byteCount;
+           }else{
+                 part.resume();
+          
+           }    
+ 
+           console.log("Write Streaming file :"+filename);
+           var writeStream = fs.createWriteStream('/tmp/'+filename);
+           writeStream.filename = filename;
+           part.pipe(writeStream);
+ 
+           part.on('data',function(chunk){
+                 console.log(filename+' read '+chunk.length + 'bytes');
+           });
+          
+           part.on('end',function(){
+                 console.log(filename+' Part read complete');
+                 writeStream.end();
+           });
+      });
+ 
+      // all uploads are completed
+      form.on('close',function(){
+           res.status(200).send('Upload complete');
+      });
+     
+      // track progress
+      form.on('progress',function(byteRead,byteExpected){
+           console.log(' Reading total  '+byteRead+'/'+byteExpected);
+      });
+     
+      form.parse(req);
 
 
     // var cache = [];

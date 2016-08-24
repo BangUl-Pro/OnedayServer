@@ -17,7 +17,7 @@
     "body-parser": "1.15.2",
     "gridfs-stream": "1.1.1",
     "util": "0.10.3",
-    "multer": "1.2.0"
+    "multiparty": "4.1.2"
   },
   "engines": {
     "node": "0.12.4",
