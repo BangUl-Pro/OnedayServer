@@ -1,14 +1,8 @@
 ﻿var http = require('http'),
     express = require('express'),
-    bodyParser = require('body-parser');
+    bodyParser = require('body-parser'),
+    router = express.Router();
 var app = express();
-
-app.configure(function() {
-    app.use(express.bodyParser());
-    app.use(express.methodOverride());
-    app.use(express.router);
-    app.use(express.static(__dirname + '/public'));
-});
 
 
 app.get('/', function (req, res) {
@@ -91,9 +85,7 @@ app.post('/upload_profile_image', function(req, res) {
     });
 });
 
-var util = require('util');
-
-app.post('/upload_images', function(req, res) {
+router.post('/upload_images', function(req, res) {
     var cache = [];
     console.log('reqjson = ' + JSON.stringify(req, function(key, value) {
         if (typeof value === 'object' && value !== null) {
@@ -129,7 +121,7 @@ app.post('/upload_images', function(req, res) {
     });
 });
 
-
+module.exports = router;
 
 
 
