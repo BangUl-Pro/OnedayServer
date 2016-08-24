@@ -2,21 +2,9 @@
     express = require('express'),
     bodyParser = require('body-parser');
 var app = express();
-
-app.set('port', process.env.PORT || 3000);
-app.set('views', __dirname + '/views');
-app.set('view engine', 'jade');
-app.use(express.favicon());
-app.use(express.logger('dev'));
-app.use(express.bodyParser());
-app.use(express.methodOverride());
-app.use(app.router);
-app.use(express.static(path.join(__dirname, 'public')));
   
-// development only
-if ('development' == app.get('env')) {
-    app.use(express.errorHandler());
-}
+app.use(bodyParser.urlencoded({extended: false}));
+app.use(bodyParser.json());
 
 
 app.get('/', function (req, res) {
@@ -27,6 +15,8 @@ app.get('/', function (req, res) {
 
 var server = http.createServer(app).listen(process.env.PORT || 5000);
 var multer = require('multer');
+var upload = multer({ dest: 'uploads/' });
+
 
 var io = require('socket.io').listen(server);
 
@@ -101,7 +91,7 @@ app.post('/upload_profile_image', function(req, res) {
 
 var util = require('util');
 
-app.post('/upload_images', function(req, res) {
+app.post('/upload_images', upload.array('photos', 12), function(req, res) {
     var cache = [];
     console.log('reqjson = ' + JSON.stringify(req, function(key, value) {
         if (typeof value === 'object' && value !== null) {
