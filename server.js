@@ -1,8 +1,11 @@
 ﻿var http = require('http'),
     express = require('express'),
-    bodyParser = require('body-parser'),
-    router = express.Router();
+    bodyParser = require('body-parser');
 var app = express();
+
+// app.set('views', __dirname + '/views');
+// app.set('view engine', 'jade');
+app.use(express.bodyParser());
 
 
 app.get('/', function (req, res) {
@@ -85,7 +88,9 @@ app.post('/upload_profile_image', function(req, res) {
     });
 });
 
-router.post('/upload_images', function(req, res) {
+var util = require('util');
+
+app.post('/upload_images', function(req, res) {
     var cache = [];
     console.log('reqjson = ' + JSON.stringify(req, function(key, value) {
         if (typeof value === 'object' && value !== null) {
@@ -121,7 +126,7 @@ router.post('/upload_images', function(req, res) {
     });
 });
 
-module.exports = router;
+
 
 
 
