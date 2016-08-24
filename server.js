@@ -12,6 +12,14 @@ var io = require('socket.io').listen(server);
 // app.use(bodyParser.json({limit: '50mb'}));
 // app.use(bodyParser.urlencoded({limit: '50mb'}));
 
+app.configure(function() {
+    app.use(express.bodyParser());
+    app.use(express.methodOverride());
+    app.use(express.router);
+    app.use(express.static(__dirname + '/public'));
+});
+
+
 app.get('/', function (req, res) {
     res.send('OneDay');
     console.log('\nOneDay');
