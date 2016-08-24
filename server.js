@@ -3,7 +3,7 @@
     app = express(),
     bodyParser = require('body-parser');
 var server = http.createServer(app).listen(process.env.PORT || 5000);
-
+var multer = require('multer');
 
 var io = require('socket.io').listen(server);
 
@@ -83,7 +83,6 @@ app.post('/upload_profile_image', function(req, res) {
 var util = require('util');
 
 app.post('/upload_images', function(req, res) {
-    console.log('req = ' + req);
     var cache = [];
     console.log('reqjson = ' + JSON.stringify(req, function(key, value) {
         if (typeof value === 'object' && value !== null) {
@@ -97,6 +96,8 @@ app.post('/upload_images', function(req, res) {
         return value;
     }));
     console.log('req.file = ' + JSON.stringify(req.file));
+    console.log('req.body = ' + JSON.stringify(req.body));
+    console.log('req.headers = ' + JSON.stringify(req.headers));
     // console.log('req.images = ' + JSON.stringify(body["images[]"]));
     fs.readFile(req.files.uploadFile.path, function(err, data) {
         if (err) {
