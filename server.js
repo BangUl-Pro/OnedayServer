@@ -1,10 +1,8 @@
 ﻿var http = require('http'),
-    express = require('express'),
-    bodyParser = require('body-parser');
+    express = require('express');
 var app = express();
   
-app.use(bodyParser.urlencoded({extended: false}));
-app.use(bodyParser.json());
+app.use(express.bodyParser());
 
 
 app.get('/', function (req, res) {
@@ -94,6 +92,7 @@ var util = require('util');
 app.post('/upload_images', function(req, res) {
     console.log(req.body);
     console.log(req.file);
+    console.log(req.files);
 
 
     // var cache = [];
