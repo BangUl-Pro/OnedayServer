@@ -1,8 +1,8 @@
 ﻿var http = require('http'),
     express = require('express');
 var app = express();
-  
-app.use(express.bodyParser());
+var fs = require('fs');
+var Grid = require('gridfs-stream');
 
 
 app.get('/', function (req, res) {
@@ -19,8 +19,8 @@ var upload = multer({ dest: 'uploads/' });
 var io = require('socket.io').listen(server);
 
 // app.use(express.bodyParser());
-// app.use(bodyParser.urlencoded({extended: false}));
-// app.use(bodyParser.json({limit: '50mb'}));
+app.use(bodyParser.urlencoded({extended: false}));
+app.use(bodyParser.json({limit: '50mb'}));
 // app.use(bodyParser.urlencoded({limit: '50mb'}));
 
 var mongoose = require('mongoose');
@@ -63,8 +63,6 @@ var userModel = mongoose.model('user', userSchema);
 var noticeModel = mongoose.model('notice', noticeSchema);
 
 
-var fs = require('fs');
-var Grid = require('gridfs-stream');
 Grid.mongo = mongoose.mongo;
 
 conn.once('open', function() {
