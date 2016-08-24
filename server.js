@@ -3,6 +3,7 @@
 var app = express();
 var fs = require('fs');
 var Grid = require('gridfs-stream');
+var bodyParser = require('body-parser');
 
 
 app.get('/', function (req, res) {
