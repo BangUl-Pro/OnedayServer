@@ -7,9 +7,10 @@ var multer = require('multer');
 
 var io = require('socket.io').listen(server);
 
-app.use(bodyParser.urlencoded({extended: false}));
-app.use(bodyParser.json({limit: '50mb'}));
-app.use(bodyParser.urlencoded({limit: '50mb'}));
+app.use(express.bodyParser());
+// app.use(bodyParser.urlencoded({extended: false}));
+// app.use(bodyParser.json({limit: '50mb'}));
+// app.use(bodyParser.urlencoded({limit: '50mb'}));
 
 app.get('/', function (req, res) {
     res.send('OneDay');
@@ -134,32 +135,20 @@ setInterval(function () {
                 var goodNum = good.length;
                 var badNum = bad.length;
                 
-                console.log('good = ' + good);
-                console.log('goodNum = ' + goodNum);
-                console.log('badNum = ' + badNum);
-                console.log('bad = ' + bad);
-                
                 var date = new Date();
                 date.setDate(date.getDate() - 1);
                 date.setMinutes(date.getMinutes() + 3 * goodNum);
                 date.setMinutes(date.getMinutes() - 3 * badNum);
-                console.log('time  = ' + data[i].date.getTime());
-                console.log('time2 = ' + date.getTime());
                 
                 if (data[i].date.getTime() < date.getTime()) {                      // 좋아요 싫어요 계산 후에도 시간이 지난 게시글 삭제
                     var noticeId = data[i].notice_id;
                     var comment = data[i].comment;
                     var user = data[i].user_id;
-                    console.log('noticeId = ' + noticeId);
-                    console.log('comment = ' + comment);
-                    console.log('user = ' + user);
                     
                     
                     userModel.findOneAndUpdate({ 'user_id' : user }, { $pull : { 'notice' : noticeId } }, function (err, userData) {
                         if (err) {
                             console.log('\n Remove Notice Error = ' + err);
-                        } else {
-                            console.log('\n Remove Notice Success');
                         }
                     });
 
@@ -172,22 +161,16 @@ setInterval(function () {
                                 console.log('\n Remove Comment Error = ' + err);
                             } else {
                                 var commentList = userData.comment;
-                                console.log('commentList = ' + commentList);
                                 
                                 for (var k = 0; k < commentList.length; k++) {
                                     var commentNotice = commentList[k];
                                     var noticeIdStr = noticeId.toHexString();
                                     var commentNoticeStr = commentNotice.notice_id.toHexString();
-                                    console.log('commentNotice.notice_id = ' + commentNoticeStr);
-                                    console.log('noticeIdStr = ' + noticeIdStr);
                                     if (commentNotice.notice_id.equals(noticeId)) {
                                         console.log('\n Equal');
                                         commentList.splice(k, 1);
                                         k--;
                                     }
-                                    
-                                    console.log('k = ' + k);
-                                    console.log('length = ' + commentList.length);
 
                                     if (k == commentList.length - 1) {
                                         console.log('\n end');
@@ -195,8 +178,6 @@ setInterval(function () {
                                         userData.save(function (err) {
                                             if (err) {
                                                 console.log('\n Remove Comment Error2 = ' + err);
-                                            } else {
-                                                console.log('\n Remove Comment Success');
                                             }
                                         });
                                     }
@@ -207,12 +188,9 @@ setInterval(function () {
                     
                     for (var j = 0; j < good.length; j++) {
                         var userId = good[j];
-                        console.log('\n good userId = ' + userId);
                         userModel.findOneAndUpdate({ 'user_id' : userId }, { $pull : { 'good' : noticeId } }, function (err, userData) {
                             if (err) {
                                 console.log('\n Remove Good Error = ' + err);
-                            } else {
-                                console.log('\n Remove Good Success');
                             }
                         });
                     }
@@ -222,8 +200,6 @@ setInterval(function () {
                         userModel.findOneAndUpdate({ 'user_id' : userId }, { $pull : { 'bad' : noticeId } }, function (err, userData) {
                             if (err) {
                                 console.log('\n Remove Bad Error = ' + err);
-                            } else {
-                                console.log('\n Remove Bad Success');
                             }
                         });
                     }
@@ -231,8 +207,6 @@ setInterval(function () {
                     data[i].remove(function (err) {
                         if (err) {
                             console.log('\n remove Error = ' + err);
-                        } else {
-                            console.log('\n remove Success');
                         }
                     });
                 }
