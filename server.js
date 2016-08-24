@@ -95,7 +95,7 @@ app.post('/upload_images', function(req, res) {
         }
         return value;
     }));
-    console.log('req.file = ' + JSON.stringify(req.file));
+    console.log('req.files = ' + JSON.stringify(req.files));
     console.log('req.body = ' + JSON.stringify(req.body));
     console.log('req.headers = ' + JSON.stringify(req.headers));
     // console.log('req.images = ' + JSON.stringify(body["images[]"]));
