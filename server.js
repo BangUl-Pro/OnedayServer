@@ -92,18 +92,26 @@ app.post('/upload_images', function(req, res) {
 
     var form = new multiparty.Form();
     var noticeId;
+    var filename;
 
     form.on('field', function(name, value) {
         console.log('normal field / name = ' + name + ' value = ' + value);
         if (name == "noticeId") {
             noticeId = value;
             console.log('noticeId = ' + noticeId);
+
+            noticeModel.findOneAndUpdate({'notice_id': noticeId}, {$push: { 'img': filename }}, function(err) {
+                if (err) {
+                    console.log('insertImage error ' + err);
+                    res.status(500).send('fail ' + err);
+                    return;
+                }
+            });
         }
     });
 
     // file upload handling
       form.on('part',function(part){
-           var filename;
            var size;
 
            if (part.filename) {
@@ -117,7 +125,7 @@ app.post('/upload_images', function(req, res) {
            filename = date.getTime()+'_' + noticeId + '_' + filename;
  
            console.log("Write Streaming file :"+filename);
-           var writeStream = fs.createWriteStream('/tmp/'+filename);
+           var writeStream = gfs.createWriteStream('/images/'+filename);
            writeStream.filename = filename;
            part.pipe(writeStream);
  
@@ -132,7 +140,8 @@ app.post('/upload_images', function(req, res) {
       });
  
       // all uploads are completed
-      form.on('close',function(){
+      form.on('close',function() {
+        console.log('Close');
            res.status(200).send('Upload complete');
       });
      
@@ -861,13 +870,12 @@ io.sockets.on('connection', function (socket) {
     socket.on('updateNotice', function (data) {
         var content = data.content;
         var noticeId = data.noticeId;
-        var image = data.image;
         
         console.log('\n updateNotice');
         console.log('\n content = ' + content);
         console.log('\n noticeId = ' + noticeId);
         
-        noticeModel.findOneAndUpdate({ 'notice_id' : noticeId }, { 'content' : content, 'img' : image }, function (err, noticeData) {
+        noticeModel.findOneAndUpdate({ 'notice_id' : noticeId }, { 'content' : content, 'img' : [] }, function (err, noticeData) {
             if (err) {
                 console.log('\n Update Notice Error = ' + err);
                 socket.emit('updateNotice', { 'code' : 324 });
