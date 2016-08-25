@@ -100,7 +100,7 @@ app.post('/upload_images', function(req, res) {
       form.on('part',function(part){
            var filename;
            var size;
-           var noticeId = req.body.noticeId;
+           // var noticeId = req.body.noticeId;
 
            if (part.filename) {
                  filename = part.filename;
@@ -109,8 +109,8 @@ app.post('/upload_images', function(req, res) {
                 part.resume();
            }
 
-           var date = new Date();
-           filename = date + filename;
+           // var date = new Date();
+           // filename = date + filename;
  
            console.log("Write Streaming file :"+filename);
            var writeStream = fs.createWriteStream('/tmp/'+filename);
@@ -125,7 +125,7 @@ app.post('/upload_images', function(req, res) {
                  console.log(filename+' Part read complete');
                  writeStream.end();
 
-                 console.log('noticeId = ' + noticeId);
+                 // console.log('noticeId = ' + noticeId);
            });
       });
  
