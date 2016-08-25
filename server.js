@@ -88,8 +88,6 @@ app.post('/upload_profile_image', function(req, res) {
     });
 });
 
-var util = require('util');
-
 app.post('/upload_images', function(req, res) {
 
     var form = new multiparty.Form();
@@ -103,7 +101,7 @@ app.post('/upload_images', function(req, res) {
            var filename;
            var size;
            var noticeId = req.body.noticeId;
-           
+
            if (part.filename) {
                  filename = part.filename;
                  size = part.byteCount;
@@ -115,7 +113,7 @@ app.post('/upload_images', function(req, res) {
            filename = date + filename;
  
            console.log("Write Streaming file :"+filename);
-           var writeStream = gfs.createWriteStream('/tmp/'+filename);
+           var writeStream = fs.createWriteStream('/tmp/'+filename);
            writeStream.filename = filename;
            part.pipe(writeStream);
  
