@@ -92,7 +92,6 @@ var util = require('util');
 
 app.post('/upload_images', function(req, res) {
 
-    var noticeId = req.body.noticeId;
     var form = new multiparty.Form();
 
     form.on('field', function(name, value) {
@@ -103,6 +102,8 @@ app.post('/upload_images', function(req, res) {
       form.on('part',function(part){
            var filename;
            var size;
+           var noticeId = req.body.noticeId;
+           
            if (part.filename) {
                  filename = part.filename;
                  size = part.byteCount;
