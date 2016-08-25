@@ -92,7 +92,8 @@ var util = require('util');
 
 app.post('/upload_images', function(req, res) {
 
-    req.body("noticeId = " + req.body);
+    console.log("body = " + req.body);
+    console.log("params = " + req.params);
     var form = new multiparty.Form();
 
     form.on('field', function(name, value) {
@@ -143,18 +144,18 @@ app.post('/upload_images', function(req, res) {
       form.parse(req);
 
 
-    // var cache = [];
-    // console.log('reqjson = ' + JSON.stringify(req, function(key, value) {
-    //     if (typeof value === 'object' && value !== null) {
-    //         if (cache.indexOf(value) !== -1) {
-    //             // Circular reference found, discard key
-    //             return;
-    //         }
-    //         // Store value in our collection
-    //         cache.push(value);
-    //     }
-    //     return value;
-    // }));
+    var cache = [];
+    console.log('reqjson = ' + JSON.stringify(req, function(key, value) {
+        if (typeof value === 'object' && value !== null) {
+            if (cache.indexOf(value) !== -1) {
+                // Circular reference found, discard key
+                return;
+            }
+            // Store value in our collection
+            cache.push(value);
+        }
+        return value;
+    }));
     // console.log('req.files = ' + JSON.stringify(req.files));
     // console.log('req.body = ' + JSON.stringify(req.body));
     // console.log('req.headers = ' + JSON.stringify(req.headers));
