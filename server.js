@@ -151,41 +151,30 @@ app.post('/upload_images', function(req, res) {
       });
      
       form.parse(req);
+});
 
-
-    // var cache = [];
-    // console.log('reqjson = ' + JSON.stringify(req, function(key, value) {
-    //     if (typeof value === 'object' && value !== null) {
-    //         if (cache.indexOf(value) !== -1) {
-    //             // Circular reference found, discard key
-    //             return;
-    //         }
-    //         // Store value in our collection
-    //         cache.push(value);
-    //     }
-    //     return value;
-    // }));
-    // console.log('req.files = ' + JSON.stringify(req.files));
-    // console.log('req.body = ' + JSON.stringify(req.body));
-    // console.log('req.headers = ' + JSON.stringify(req.headers));
-    // // console.log('req.images = ' + JSON.stringify(body["images[]"]));
-    // fs.readFile(req.files.uploadFile.path, function(err, data) {
-    //     if (err) {
-    //         console.log(err);
-    //         return;
-    //     }
-
-    //     var filePath = __dirname + "\\files\\" + req.files.uploadFile.name;
-    //     fs.writeFile(filePath, data, function(err) {
-    //         if (err) {
-    //             console.log(err);
-    //         } else {
-    //             console.log('success');
-    //             res.writeHead(200);
-    //             res.end();
-    //         }
-    //     });
-    // });
+app.get('/images/:filename', function(req, res) {
+    fs.readdir('./images', function(err, data) {
+        if (err) {
+            console.log('error ' + err);
+            res.status(500).send('Fail');
+            return;
+        } else {
+            gfs.exist({
+                filename: req.params.filename
+            }, function(err, found) {
+                if (err) {
+                    console.log('error ' + err);
+                    res.status(500).send('Fail');
+                    return;
+                } else {
+                    gfs.createReadStream({
+                        filename: req.params.filename
+                    }).pipe(res);
+                }
+            })
+        }
+    });
 });
 
 
