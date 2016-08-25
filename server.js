@@ -91,17 +91,19 @@ app.post('/upload_profile_image', function(req, res) {
 app.post('/upload_images', function(req, res) {
 
     var form = new multiparty.Form();
+    var noticeId;
 
     form.on('field', function(name, value) {
         console.log('normal field / name = ' + name + ' value = ' + value);
+        if (name == 'noticeId') {
+            noticeId = value;
+        }
     });
 
     // file upload handling
       form.on('part',function(part){
            var filename;
            var size;
-           console.log('body = ' + JSON.stringify(req.body));
-           console.log('param = ' + JSON.stringify(req.params));
            var noticeId = req.body.noticeId;
 
            if (part.filename) {
