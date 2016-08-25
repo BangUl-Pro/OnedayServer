@@ -571,7 +571,7 @@ io.sockets.on('connection', function (socket) {
                             socket.emit('postNotice', { 'code' : 308 });
                         } else {
                             console.log('\n postNotice add User Notice Success');
-                            socket.emit('postNotice', { 'code' : 200 });
+                            socket.emit('postNotice', { 'code' : 200, 'notice': noticeData });
                         }
                     });
                 });
