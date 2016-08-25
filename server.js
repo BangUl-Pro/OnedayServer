@@ -158,9 +158,6 @@ app.get('/images/:filename', function(req, res) {
         filename: req.params.filename
     });
     readstream.pipe(res);
-    fs_write_stream.on('close', function() {
-        console.log('끝');
-    });
 });
 
 
