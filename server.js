@@ -122,7 +122,7 @@ app.post('/upload_images', function(req, res) {
            }
 
            var date = new Date();
-           filename = date.getTime()+'_' + noticeId + '_' + filename;
+           filename = date.getTime() + '_' + filename;
  
            console.log("Write Streaming file :"+filename);
            var writeStream = gfs.createWriteStream('/images/'+filename);
