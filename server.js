@@ -104,7 +104,6 @@ app.post('/upload_images', function(req, res) {
       form.on('part',function(part){
            var filename;
            var size;
-           var noticeId = req.body.noticeId;
 
            if (part.filename) {
                  filename = part.filename;
