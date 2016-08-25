@@ -154,7 +154,7 @@ app.post('/upload_images', function(req, res) {
 });
 
 app.get('/images/:filename', function(req, res) {
-    fs.readdir('./images', function(err, data) {
+    fs.readdir('/images', function(err, data) {
         if (err) {
             console.log('error ' + err);
             res.status(500).send('Fail');
