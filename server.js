@@ -66,10 +66,11 @@ var noticeModel = mongoose.model('notice', noticeSchema);
 
 
 Grid.mongo = mongoose.mongo;
+var gfs;
 
 conn.once('open', function() {
     console.log('mongoose open');
-
+    gfs = Grid(conn.db);
 });
 
 
@@ -90,6 +91,8 @@ app.post('/upload_profile_image', function(req, res) {
 var util = require('util');
 
 app.post('/upload_images', function(req, res) {
+
+    req.body("noticeId = " + req.body);
     var form = new multiparty.Form();
 
     form.on('field', function(name, value) {
@@ -103,13 +106,15 @@ app.post('/upload_images', function(req, res) {
            if (part.filename) {
                  filename = part.filename;
                  size = part.byteCount;
-           }else{
-                 part.resume();
-          
-           }    
+           } else {
+                part.resume();
+           }
+
+           var date = new Date();
+           filename = date + filename;
  
            console.log("Write Streaming file :"+filename);
-           var writeStream = fs.createWriteStream('/tmp/'+filename);
+           var writeStream = gfs.createWriteStream('/tmp/'+filename);
            writeStream.filename = filename;
            part.pipe(writeStream);
  
@@ -120,6 +125,8 @@ app.post('/upload_images', function(req, res) {
            part.on('end',function(){
                  console.log(filename+' Part read complete');
                  writeStream.end();
+
+
            });
       });
  
