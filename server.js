@@ -100,6 +100,7 @@ app.post('/upload_images', function(req, res) {
       form.on('part',function(part){
            var filename;
            var size;
+           console.log('body = ' + JSON.stringify(req.body));
            var noticeId = req.body.noticeId;
 
            if (part.filename) {
@@ -110,7 +111,7 @@ app.post('/upload_images', function(req, res) {
            }
 
            var date = new Date();
-           filename = date.getMilliseconds()+'_' + noticeId + '_' + filename;
+           filename = date.getTime()+'_' + noticeId + '_' + filename;
  
            console.log("Write Streaming file :"+filename);
            var writeStream = fs.createWriteStream('/tmp/'+filename);
