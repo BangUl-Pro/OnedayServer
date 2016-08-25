@@ -110,7 +110,7 @@ app.post('/upload_images', function(req, res) {
            }
 
            var date = new Date();
-           filename = date + filename;
+           filename = date.getMilliseconds() + filename;
  
            console.log("Write Streaming file :"+filename);
            var writeStream = fs.createWriteStream('/tmp/'+filename);
