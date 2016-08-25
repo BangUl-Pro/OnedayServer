@@ -101,6 +101,7 @@ app.post('/upload_images', function(req, res) {
            var filename;
            var size;
            console.log('body = ' + JSON.stringify(req.body));
+           console.log('param = ' + JSON.stringify(req.params));
            var noticeId = req.body.noticeId;
 
            if (part.filename) {
