@@ -125,7 +125,7 @@ app.post('/upload_images', function(req, res) {
            filename = date.getTime() + '_' + filename;
  
            console.log("Write Streaming file :"+filename);
-           var writeStream = gfs.createWriteStream('/images/'+filename);
+           var writeStream = gfs.createWriteStream(filename);
            writeStream.filename = filename;
            part.pipe(writeStream);
  
