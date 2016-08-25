@@ -97,6 +97,7 @@ app.post('/upload_images', function(req, res) {
         console.log('normal field / name = ' + name + ' value = ' + value);
         if (name == 'noticeId') {
             noticeId = value;
+            console.log('noticeId = ' + noticeId);
         }
     });
 
@@ -127,14 +128,14 @@ app.post('/upload_images', function(req, res) {
            part.on('end',function(){
                  console.log(filename+' Part read complete');
                  writeStream.end();
-
-                 console.log('noticeId = ' + noticeId);
            });
       });
  
       // all uploads are completed
       form.on('close',function(){
            res.status(200).send('Upload complete');
+
+           console.log('noticeId = ' + noticeId);
       });
      
       // track progress
