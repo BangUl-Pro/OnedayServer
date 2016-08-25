@@ -154,26 +154,12 @@ app.post('/upload_images', function(req, res) {
 });
 
 app.get('/images/:filename', function(req, res) {
-    fs.readdir(__dirname + '/images', function(err, data) {
-        if (err) {
-            console.log('error ' + err);
-            res.status(500).send('Fail');
-            return;
-        } else {
-            gfs.exist({
-                filename: req.params.filename
-            }, function(err, found) {
-                if (err) {
-                    console.log('error ' + err);
-                    res.status(500).send('Fail');
-                    return;
-                } else {
-                    gfs.createReadStream({
-                        filename: req.params.filename
-                    }).pipe(res);
-                }
-            })
-        }
+    var readstream = gfs.createReadStream({
+        filename: req.params.filename
+    });
+    readstream.pipe(res);
+    fs_write_stream.on('close', function() {
+        console.log('끝');
     });
 });
 
