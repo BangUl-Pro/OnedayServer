@@ -95,7 +95,7 @@ app.post('/upload_images', function(req, res) {
 
     form.on('field', function(name, value) {
         console.log('normal field / name = ' + name + ' value = ' + value);
-        if (name == 'noticeId') {
+        if (name == "noticeId") {
             noticeId = value;
             console.log('noticeId = ' + noticeId);
         }
@@ -134,8 +134,6 @@ app.post('/upload_images', function(req, res) {
       // all uploads are completed
       form.on('close',function(){
            res.status(200).send('Upload complete');
-
-           console.log('noticeId = ' + noticeId);
       });
      
       // track progress
