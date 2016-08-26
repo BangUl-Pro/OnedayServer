@@ -34,6 +34,7 @@ var ObjectId = mongoose.Schema.ObjectId
 var userSchema = mongoose.Schema({
     user_id : String,
     image : String,
+    phone : String,
     name : String,
     pw : String,
     birth : Date,
@@ -492,18 +493,20 @@ io.sockets.on('connection', function (socket) {
         var pw = data.userPw;
         var birth = data.userBirth;
         var mail = data.userMail;
+        var phone = data.phone;
         console.log('\n id = ' + id);
         console.log('\n name = ' + name);
         console.log('\n pw = ' + pw);
         console.log('\n birth = ' + birth);
         console.log('\n mail = ' + mail);
+        console.log('\n phone = ' + phone);
         
         userModel.findOne({ 'user_id' : id }, function (err, userData) {
             if (userData != null) {                         // 해당 아이디를 가진 유저가 이미 있다면
                 socket.emit('signUp', { code: 300 });
                 console.log('\n signUp ID already');
             } else {                                        // 해당 아이디를 가진 유저가 없다면
-                var user = new userModel({ 'user_id' : id, 'pw' : pw, 'birth' : birth, 'mail' : mail, 'image' : null, 'name' : name });
+                var user = new userModel({ 'user_id' : id, 'pw' : pw, 'birth' : birth, 'mail' : mail, 'image' : null, 'name' : name, 'phone': phone });
                 user.save(function (err) {
                     if (err) {                              // 아이디 생성 실패 시
                         socket.emit('signUp', { code: 301 });
