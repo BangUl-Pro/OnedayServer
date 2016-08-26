@@ -388,21 +388,20 @@ io.sockets.on('connection', function (socket) {
                 }
                 
                 for (var i = 0; i < userData.notice.length; i++) {
-                    console.log(array.indexOf(userData.notice[i]));
-                    if (array.indexOf(userData.notice[i]) != -1) {
+                    if (array.indexOf(userData.notice[i]) == -1) {
                         array.push(userData.notice[i])
                     }
                 }
                 
                 
                 for (var i = 0; i < userData.good.length; i++) {
-                    if (array.indexOf(userData.good[i]) != -1) {
+                    if (array.indexOf(userData.good[i]) == -1) {
                         array.push(userData.good[i]);
                     }
                 }
                 
                 for (var i = 0; i < userData.comment.length; i++) {
-                    if (array.indexOf(userData.comment[i].notice_id) != -1) {
+                    if (array.indexOf(userData.comment[i].notice_id) == -1) {
                         array.push(userData.comment[i].notice_id);
                     }
                 }
