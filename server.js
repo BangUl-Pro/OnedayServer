@@ -107,42 +107,44 @@ app.post('/upload_images', function(req, res) {
     });
 
     // file upload handling
-      form.on('part',function(part){
-           var size;
+    form.on('part',function(part){
+        var size;
 
-           if (part.filename) {
-                 filename = part.filename;
-                 size = part.byteCount;
-           } else {
-                part.resume();
-           }
+        if (part.filename) {
+            filename = part.filename;
+             size = part.byteCount;
+       } else {
+            part.resume();
+       }
+       var date = new Date();
+       filename = date.getTime() + '_' + filename;
 
-           var date = new Date();
-           filename = date.getTime() + '_' + filename;
+       console.log("Write Streaming file :"+filename);
+       var writeStream = gfs.createWriteStream(filename);
+       writeStream.filename = filename;
+       part.pipe(writeStream);
  
-           console.log("Write Streaming file :"+filename);
-           var writeStream = gfs.createWriteStream(filename);
-           writeStream.filename = filename;
-           part.pipe(writeStream);
+       part.on('data',function(chunk){
+             console.log(filename+' read '+chunk.length + 'bytes');
+       });
+      
+       part.on('end',function(){
+             console.log(filename+' Part read complete');
+             writeStream.end();
+       });
+    });
  
-           part.on('data',function(chunk){
-                 console.log(filename+' read '+chunk.length + 'bytes');
-           });
-          
-           part.on('end',function(){
-                 console.log(filename+' Part read complete');
-                 writeStream.end();
-           });
-      });
- 
-      // all uploads are completed
-      form.on('close',function() {
+    // all uploads are completed
+    orm.on('close',function() {
         if (noticeId) {
             noticeModel.findOneAndUpdate({'notice_id': noticeId}, {$push: { 'img': filename }}, function(err) {
                 if (err) {
                     console.log('insertImage error ' + err);
                     res.status(500).send('fail ' + err);
                     return;
+                } else {
+                    console.log('Close');
+                    res.status(200).send('Upload complete'); 
                 }
             });
         } else {
@@ -151,19 +153,20 @@ app.post('/upload_images', function(req, res) {
                     console.log(err);
                     res.status(500).send('file ' + err);
                     return;
+                } else {
+                    console.log('Close');
+                    res.status(200).send(filename); 
                 }
             });
         }
-        console.log('Close');
-        res.status(200).send('Upload complete'); 
-      });
+    });
      
-      // track progress
-      form.on('progress',function(byteRead,byteExpected){
-           console.log(' Reading total  '+byteRead+'/'+byteExpected);
-      });
+    // track progress
+    form.on('progress',function(byteRead,byteExpected){
+        console.log(' Reading total  '+byteRead+'/'+byteExpected);
+    });
      
-      form.parse(req);
+    form.parse(req);
 });
 
 app.get('/images/:filename', function(req, res) {
