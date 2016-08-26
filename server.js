@@ -388,6 +388,7 @@ io.sockets.on('connection', function (socket) {
                 }
                 
                 for (var i = 0; i < userData.notice.length; i++) {
+                    console.log(array.indexOf(userData.notice[i]));
                     if (array.indexOf(userData.notice[i]) != -1) {
                         array.push(userData.notice[i])
                     }
@@ -409,6 +410,11 @@ io.sockets.on('connection', function (socket) {
                 var noticeList = new Array();
                 var length = array.length;
                 
+                if (length == 0) {
+                    socket.emit('profile', { 'code': 500});
+                    return;
+                }
+
                 for (var i = 0; i < length; i++) {
                     var noticeId = array.pop();
                     noticeModel.findOne({ 'notice_id' : noticeId }, function (err, noticeData) {
