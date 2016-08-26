@@ -91,7 +91,8 @@ app.post('/upload_profile_image', function(req, res) {
 app.post('/upload_images', function(req, res) {
 
     var form = new multiparty.Form();
-    var noticeId;
+    var userId = null;
+    var noticeId = null;
     var filename;
 
     form.on('field', function(name, value) {
@@ -99,25 +100,9 @@ app.post('/upload_images', function(req, res) {
         if (name == "noticeId") {
             noticeId = value;
             console.log('noticeId = ' + noticeId);
-
-            noticeModel.findOneAndUpdate({'notice_id': noticeId}, {$push: { 'img': filename }}, function(err) {
-                if (err) {
-                    console.log('insertImage error ' + err);
-                    res.status(500).send('fail ' + err);
-                    return;
-                }
-            });
         } else if (name == "userId") {
-            var userId = value;
+            userId = value;
             console.log('userId = ' + userId);
-
-            userModel.findOneAndUpdate({'user_id': userId}, {'image': filename}, function(err) {
-                if (err) {
-                    console.log(err);
-                    res.status(500).send('file ' + err);
-                    return;
-                }
-            });
         }
     });
 
@@ -152,8 +137,25 @@ app.post('/upload_images', function(req, res) {
  
       // all uploads are completed
       form.on('close',function() {
+        if (noticeId) {
+            noticeModel.findOneAndUpdate({'notice_id': noticeId}, {$push: { 'img': filename }}, function(err) {
+                if (err) {
+                    console.log('insertImage error ' + err);
+                    res.status(500).send('fail ' + err);
+                    return;
+                }
+            });
+        } else {
+            userModel.findOneAndUpdate({'user_id': userId}, {'image': filename}, function(err) {
+                if (err) {
+                    console.log(err);
+                    res.status(500).send('file ' + err);
+                    return;
+                }
+            });
+        }
         console.log('Close');
-           res.status(200).send('Upload complete');
+        res.status(200).send('Upload complete'); 
       });
      
       // track progress
