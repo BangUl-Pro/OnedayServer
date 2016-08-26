@@ -135,7 +135,7 @@ app.post('/upload_images', function(req, res) {
     });
  
     // all uploads are completed
-    orm.on('close',function() {
+    form.on('close',function() {
         if (noticeId) {
             noticeModel.findOneAndUpdate({'notice_id': noticeId}, {$push: { 'img': filename }}, function(err) {
                 if (err) {
