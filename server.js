@@ -107,6 +107,17 @@ app.post('/upload_images', function(req, res) {
                     return;
                 }
             });
+        } else if (name == "userId") {
+            var userId = value;
+            console.log('userId = ' + userId);
+
+            userModel.findOneAndUpdate({'user_id': userId}, {'image', filename}, function(err) {
+                if (err) {
+                    console.log(err);
+                    res.status(500).send('file ' + err);
+                    return;
+                }
+            });
         }
     });
 
@@ -388,8 +399,6 @@ io.sockets.on('connection', function (socket) {
                 }
                 
                 for (var i = 0; i < userData.notice.length; i++) {
-                    console.log(userData.notice[i].toString());
-                    console.log(array.indexOf(userData.notice[i].toString()));
                     if (array.indexOf(userData.notice[i].toString()) == -1) {
                         array.push(userData.notice[i].toString())
                     }
@@ -397,16 +406,12 @@ io.sockets.on('connection', function (socket) {
                 
                 
                 for (var i = 0; i < userData.good.length; i++) {
-                    console.log(userData.good[i].toString());
-                    console.log(array.indexOf(userData.good[i].toString()));
                     if (array.indexOf(userData.good[i].toString()) == -1) {
                         array.push(userData.good[i].toString());
                     }
                 }
                 
                 for (var i = 0; i < userData.comment.length; i++) {
-                    console.log(userData.comment[i].notice_id.toString());
-                    console.log(array.indexOf(userData.comment[i].notice_id.toString()));
                     if (array.indexOf(userData.comment[i].notice_id.toString()) == -1) {
                         array.push(userData.comment[i].notice_id.toString());
                     }
