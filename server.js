@@ -398,6 +398,24 @@ io.sockets.on('connection', function (socket) {
             }
         });
     });
+
+    socket.on('setBirth', function (data) {
+        var id = data.userId;
+        var birth = data.userBirth;
+        console.log('\n setBirth');
+        console.log('\n id = ' + id);
+        console.log('\n birth = ' + birth);
+        
+        userModel.findOneAndUpdate({ 'user_id': id }, { 'birth' : birth }, function (err, userData) {
+            if (err) {
+                console.log('\n setBirth Error = ' + err);
+                socket.emit('setBirth', { 'code': 303 });
+            } else {
+                console.log('\n setBirth Success');
+                socket.emit('setBirth', { 'code': 200 });
+            }
+        });
+    });
     
     
     socket.on('profile', function (data) {
