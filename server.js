@@ -388,28 +388,28 @@ io.sockets.on('connection', function (socket) {
                 }
                 
                 for (var i = 0; i < userData.notice.length; i++) {
-                    console.log(userData.notice[i]);
-                    console.log(array.indexOf(userData.notice[i]));
-                    if (array.indexOf(userData.notice[i]) == -1) {
-                        array.push(userData.notice[i])
+                    console.log(userData.notice[i].toString());
+                    console.log(array.indexOf(userData.notice[i].toString()));
+                    if (array.indexOf(userData.notice[i].toString()) == -1) {
+                        array.push(userData.notice[i].toString())
                     }
                 }
                 
                 
                 for (var i = 0; i < userData.good.length; i++) {
-                    console.log(userData.good[i]);
-                    console.log(array.indexOf(userData.good[i]));
-                    if (array.indexOf(userData.good[i]) == -1) {
-                        array.push(userData.good[i]);
+                    console.log(userData.good[i].toString());
+                    console.log(array.indexOf(userData.good[i].toString()));
+                    if (array.indexOf(userData.good[i].toString()) == -1) {
+                        array.push(userData.good[i].toString());
                     }
                 }
                 
                 for (var i = 0; i < userData.comment.length; i++) {
-                    console.log(userData.comment[i].notice_id);
-                    console.log(array.indexOf(userData.comment[i].notice_id));
-                    if (array.indexOf(userData.comment[i].notice_id) == -1) {
-                        array.push(userData.comment[i].notice_id);
-                    } 
+                    console.log(userData.comment[i].notice_id.toString());
+                    console.log(array.indexOf(userData.comment[i].notice_id.toString()));
+                    if (array.indexOf(userData.comment[i].notice_id.toString()) == -1) {
+                        array.push(userData.comment[i].notice_id.toString());
+                    }
                 }
                 
                 var noticeList = new Array();
