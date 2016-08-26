@@ -111,7 +111,7 @@ app.post('/upload_images', function(req, res) {
             var userId = value;
             console.log('userId = ' + userId);
 
-            userModel.findOneAndUpdate({'user_id': userId}, {'image', filename}, function(err) {
+            userModel.findOneAndUpdate({'user_id': userId}, {'image': filename}, function(err) {
                 if (err) {
                     console.log(err);
                     res.status(500).send('file ' + err);
