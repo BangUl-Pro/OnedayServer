@@ -388,6 +388,7 @@ io.sockets.on('connection', function (socket) {
                 }
                 
                 for (var i = 0; i < userData.notice.length; i++) {
+                    console.log(userData.notice[i]);
                     console.log(array.indexOf(userData.notice[i]));
                     if (array.indexOf(userData.notice[i]) == -1) {
                         array.push(userData.notice[i])
@@ -396,6 +397,7 @@ io.sockets.on('connection', function (socket) {
                 
                 
                 for (var i = 0; i < userData.good.length; i++) {
+                    console.log(userData.good[i]);
                     console.log(array.indexOf(userData.good[i]));
                     if (array.indexOf(userData.good[i]) == -1) {
                         array.push(userData.good[i]);
@@ -403,10 +405,11 @@ io.sockets.on('connection', function (socket) {
                 }
                 
                 for (var i = 0; i < userData.comment.length; i++) {
+                    console.log(userData.comment[i].notice_id);
                     console.log(array.indexOf(userData.comment[i].notice_id));
                     if (array.indexOf(userData.comment[i].notice_id) == -1) {
                         array.push(userData.comment[i].notice_id);
-                    }
+                    } 
                 }
                 
                 var noticeList = new Array();
