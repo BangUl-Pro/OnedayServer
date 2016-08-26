@@ -153,8 +153,24 @@ app.post('/upload_images', function(req, res) {
                     console.log(err);
                     res.status(500).send('file ' + err);
                     return;
+                }
+            });
+
+            noticeModel.find({'user_id': userId}, function(err, noticeData) {
+                if (err) {
+                    console.log(err);
+                    res.status(500).send(err);
+                    return;
                 } else {
-                    console.log('Close');
+                    for (var i = 0; i < noticeData.length; i++) {
+                        noticeModel.findOneAndUpdate({'notice_id': noticeData[i].notice_id}, {'user_img': filename}, function(err) {
+                            if (err) {
+                                console.log(err);
+                                res.status(500).send(err);
+                            }
+                        });
+                    }
+                    console.log('Complete');
                     res.status(200).send(filename); 
                 }
             });
