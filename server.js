@@ -284,6 +284,16 @@ setInterval(function () {
                             console.log('\n remove Error = ' + err);
                         }
                     });
+
+                    for image in data[i].img {
+                        gfs.remove({
+                            filename: image
+                        }, function(err) {
+                            if (err) {
+                                console.log('\n removeError = ' + err);
+                            }
+                        });
+                    }
                 }
             }
         }
@@ -917,6 +927,16 @@ io.sockets.on('connection', function (socket) {
                 console.log('\n Update Notice Error = ' + err);
                 socket.emit('updateNotice', { 'code' : 324 });
             } else {
+                for image in images {
+                    gfs.remove({
+                        filename: image
+                    }, function(err) {
+                        if (err) {
+                            console.log('\n removeError = ' + err);
+                        }
+                    });
+                }
+
                 console.log('\n Update Notice Success');
                 socket.emit('updateNotice', { 'code' : 200 });
             }
@@ -998,6 +1018,7 @@ io.sockets.on('connection', function (socket) {
                 var noticeId = noticeData.notice_id;
                 var comment = noticeData.comment;
                 var user = noticeData.user_id;
+                var images = noticeData.img;
                 console.log('noticeId = ' + noticeId);
                 console.log('comment = ' + comment);
                 console.log('user = ' + user);
@@ -1069,6 +1090,16 @@ io.sockets.on('connection', function (socket) {
                             console.log('\n Remove Bad Error = ' + err);
                         } else {
                             console.log('\n Remove Bad Success');
+                        }
+                    });
+                }
+
+                for image in images {
+                    gfs.remove({
+                        filename: image
+                    }, function(err) {
+                        if (err) {
+                            console.log('\n removeError = ' + err);
                         }
                     });
                 }
