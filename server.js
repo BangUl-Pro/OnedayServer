@@ -187,6 +187,7 @@ app.post('/upload_images', function(req, res) {
 });
 
 app.get('/images/:filename', function(req, res) {
+    console.log('getImage = ' + req.params.filename);
     var readstream = gfs.createReadStream({
         filename: req.params.filename
     });
