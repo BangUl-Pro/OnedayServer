@@ -999,8 +999,35 @@ io.sockets.on('connection', function (socket) {
             'code' : 200,
             'friends' : friends
         });
-    })
+    });
 
+    socket.on('recommendFriendByPhoneNumber', function(data) {
+        var userId = data.userId;
+        var phoneNumbers = data.phoneNumbers;
+
+        if (!userId || !phoneNumbers) {
+            console.log('data lose');
+            socket.emit('recommendFriendByPhoneNumber', {
+                'code' : 500
+            });
+            return;
+        } else {
+            userModel.findOne({'phone': {$in : phoneNumbers}}, function(err, userData) {
+                if (err) {
+                    console.log('번호로 친구 찾기 에러 = ' + err);
+                    socket.emit('recommendFriendByPhoneNumber', {
+                        'code' : 500
+                    });
+                    return;
+                } else {
+                    socket.emit('recommendFriendByPhoneNumber', {
+                        'code' : 200,
+                        'friends' : userData
+                    });
+                }
+            });
+        }
+    });
 
     socket.on('removeNotice', function (data) {
         var noticeId = data.noticeId;
@@ -1113,4 +1140,6 @@ io.sockets.on('connection', function (socket) {
             }
         });
     });
+
+
 });
