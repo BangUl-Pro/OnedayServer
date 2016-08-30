@@ -285,7 +285,8 @@ setInterval(function () {
                         }
                     });
 
-                    for each (var image in data[i].img) {
+                    for (var j = 0; j < data[i].img; j++) {
+                        var image = data[i].img[j];
                         gfs.remove({
                             filename: image
                         }, function(err) {
@@ -927,7 +928,8 @@ io.sockets.on('connection', function (socket) {
                 console.log('\n Update Notice Error = ' + err);
                 socket.emit('updateNotice', { 'code' : 324 });
             } else {
-                for each (var image in images) {
+                for (var i = noticeData.img.length - 1; i >= 0; i--) {
+                    var image = noticeData.img[i];
                     gfs.remove({
                         filename: image
                     }, function(err) {
@@ -1094,7 +1096,9 @@ io.sockets.on('connection', function (socket) {
                     });
                 }
 
-                for each (var image in images) {
+                for (var i = images.length - 1; i >= 0; i--) {
+                    var image = images[i];
+
                     gfs.remove({
                         filename: image
                     }, function(err) {
