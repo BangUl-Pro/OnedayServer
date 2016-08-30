@@ -982,22 +982,19 @@ io.sockets.on('connection', function (socket) {
     socket.on('getFriendProfile', function(data) {
         var users = data.users;
         var friends = [];
-        for (var i = 0; i < users.length; i++) {
-            userModel.findOne({'user_id' : users[i]}, function(err, userData) {
-                if (err) {
-                    console.log('user 찾기 에러');
-                    socket.emit('getFriendProfile', {
-                        'code' : 500
-                    });
-                    return;
-                }
-
-                friends.push(userData);
-            });
-        }
-        socket.emit('getFriendProfile', {
-            'code' : 200,
-            'friends' : friends
+        userModel.findOne({'user_id' : {$in: users}}, function(err, userData) {
+            if (err) {
+                console.log('user 찾기 에러');
+                socket.emit('getFriendProfile', {
+                    'code' : 500
+                });
+                return;
+            } else {
+                socket.emit('getFriendProfile', {
+                    'code' : 200,
+                    'friends' : friends
+                });
+            }
         });
     });
 
