@@ -1012,7 +1012,7 @@ io.sockets.on('connection', function (socket) {
             });
             return;
         } else {
-            userModel.findOne({'phone': {$in : phoneNumbers}}, function(err, userData) {
+            userModel.find({'phone': {$in : phoneNumbers}}, function(err, userData) {
                 if (err) {
                     console.log('번호로 친구 찾기 에러 = ' + err);
                     socket.emit('recommendFriendByPhoneNumber', {
