@@ -888,7 +888,7 @@ io.sockets.on('connection', function (socket) {
                     socket.emit('findPw', { 'code' : 322 });
                 } else {
                     console.log('\n find User DB Success');
-                    socket.emit('findPw', { 'code' : 200 });
+                    socket.emit('findPw', { 'code' : 200, 'password': userData.pw });
                 }
             }
         });
