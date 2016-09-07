@@ -858,7 +858,7 @@ io.sockets.on('connection', function (socket) {
                 socket.emit('findId', { 'code' : 319 });
             } else {
                 console.log('userData = ' + userData);
-                if (userData == null | typeof userData === 'undefined') {
+                if (!userData) {
                     console.log('\n find User DB Null');
                     socket.emit('findId', { 'code' : 321 });
                 } else {
@@ -883,7 +883,7 @@ io.sockets.on('connection', function (socket) {
                 console.log('\n find User DB Error = ' + err);
                 socket.emit('findPw', { 'code' : 320 });
             } else {
-                if (userData == null | typeof userData === 'undefined') {
+                if (!userData) {
                     console.log('\n find User DB Null');
                     socket.emit('findPw', { 'code' : 322 });
                 } else {
