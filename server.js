@@ -42,7 +42,7 @@ var userSchema = mongoose.Schema({
     friends: [ObjectId],
     good : [ObjectId],
     bad : [ObjectId],
-    comment : [{ notice_id : ObjectId, content : String }],
+    comment : [{ notice_id : ObjectId, comment_id: ObjectId }],
     notice : [ObjectId],
     delete_comment : [{ notice_id: String, content: String, time : Date }]
 });
@@ -55,7 +55,7 @@ var noticeSchema = mongoose.Schema({
     content : String,
     date : Date,
     img : [String],
-    comment : [{ user_id: String, user_img:String, content: String, date : Date, name : String }],
+    comment : [{ user_id: String, comment_id: ObjectId, user_img:String, content: String, date : Date, name : String }],
     good : [String],
     bad : [String],
     delete_comment : [{ user_id: String, content: String, date : Date }]
@@ -754,15 +754,17 @@ io.sockets.on('connection', function (socket) {
         userModel.findOneAndUpdate({ 'user_id' : id }, { $push: { 'comment' : { 'notice_id' : noticeId, 'content' : comment } } }, function (err, userData) {
             if (err) {
                 console.log('\n comment Update User DB Error = ' + err);
-                socket.emit('insertComment', { 'code' : 312, 'comment' : comment, 'position' : position, 'noticeId' : noticeId });
+                socket.emit('insertComment', { 'code' : 312, 'comment' : comment, 'noticeId' : noticeId });
             } else {
-                noticeModel.findOneAndUpdate({ 'notice_id' : noticeId }, { $push : { 'comment' : { 'user_id' : id, 'user_image' : userData.image, 'content' : comment, 'name' : name, 'date' : date } } }, function (err, noticeData) {
+                var commentId = new ObjectId;
+
+                noticeModel.findOneAndUpdate({ 'notice_id' : noticeId }, { $push : { 'comment' : { 'user_id' : id, 'user_image' : userData.image, 'content' : comment, 'name' : name, 'date' : date, 'comment_id': commentId } } }, function (err, noticeData) {
                     if (err) {
                         console.log('\n insertComment Update Notice DB Error = ' + err);
-                        socket.emit('insertComment', { 'code' : 313, 'comment' : comment, 'position' : position, 'noticeId' : noticeId });
+                        socket.emit('insertComment', { 'code' : 313, 'comment' : comment, 'noticeId' : noticeId });
                     } else {
                         console.log('\n insertComment Success');
-                        socket.emit('insertComment', { 'code' : 200, 'comment' : comment, 'position' : position, 'noticeId' : noticeId });
+                        socket.emit('insertComment', { 'code' : 200, 'comment' : comment, 'noticeId' : noticeId, 'comment_id': commentId, 'created': date });
                     }
                 });
             }
