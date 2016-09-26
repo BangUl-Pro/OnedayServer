@@ -756,7 +756,7 @@ io.sockets.on('connection', function (socket) {
                 console.log('\n comment Update User DB Error = ' + err);
                 socket.emit('insertComment', { 'code' : 312, 'comment' : comment, 'noticeId' : noticeId });
             } else {
-                var commentId = new ObjectId;
+                var commentId = new mongoose.Types.ObjectId;
 
                 noticeModel.findOneAndUpdate({ 'notice_id' : noticeId }, { $push : { 'comment' : { 'user_id' : id, 'user_image' : userData.image, 'content' : comment, 'name' : name, 'date' : date, 'comment_id': commentId } } }, function (err, noticeData) {
                     if (err) {
@@ -764,7 +764,7 @@ io.sockets.on('connection', function (socket) {
                         socket.emit('insertComment', { 'code' : 313, 'comment' : comment, 'noticeId' : noticeId });
                     } else {
                         console.log('\n insertComment Success');
-                        socket.emit('insertComment', { 'code' : 200, 'comment' : comment, 'noticeId' : noticeId, 'comment_id': commentId, 'created': date });
+                        socket.emit('insertComment', { 'code' : 200, 'comment' : comment, 'noticeId' : noticeId, 'commentId': commentId, 'created': date });
                     }
                 });
             }
